@@ -68,6 +68,7 @@ function solve(input: string): string {
   let indentLayer = 0;
   let output = "";
   let inputAsArray = input.split(", ");
+  console.log(input);
 
   for (let i = 0; i < inputAsArray.length; i++) {
     const currentItem = inputAsArray[i];
@@ -106,9 +107,49 @@ function solve(input: string): string {
   return output.trim();
 }
 
+function prepInput(input: string) {
+  const inputLines = input
+    .split("\n")
+    .map((l) => l)
+    .filter((l) => l.trim().startsWith("-"));
+
+  return inputLines.map((line) =>
+    line.replace(/^([ \t]*)-\s+/gm, "$1").split(INDENT)
+  );
+}
+
+function countEmpty(stringArray: string[]) {
+  let i = 0;
+  while (i < stringArray.length && stringArray[i] === "") i++;
+  return i;
+}
+
 function sort(input: string, sortDirection: "ASC" | "DESC" = "ASC") {
-  let split1 = input.split("");
-  console.log(split1);
+  const direction = sortDirection === "ASC" ? 1 : -1;
+
+  const arrays = prepInput(input);
+
+  arrays.sort((a, b) => {
+    const indentCountA = countEmpty(a);
+    const indentCountB = countEmpty(b);
+
+    if (indentCountA !== indentCountB)
+      return (indentCountA - indentCountB) * direction;
+
+    const aKey = a.slice(indentCountA).join(".");
+    const bKey = b.slice(indentCountB).join(".");
+    return aKey.localeCompare(bKey) * direction;
+  });
+
+  const output = arrays
+    .map((array) => {
+      const indentDepth = countEmpty(array);
+      const name = array[indentDepth] ?? "";
+      return `${INDENT.repeat(indentDepth)}${HYPHEN} ${name}`;
+    })
+    .join("\n");
+
+  console.log(output);
 }
 
 const isDirectRun =
