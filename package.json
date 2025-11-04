@@ -3,10 +3,17 @@
   "version": "1.0.0",
   "description": "RedRover challenge",
   "main": "dist/solution.js",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "start": "node dist/solution.js",
-    "solve": "ts-node solution.ts"
+    "solve": "ts-node solution.ts",
+    "test": "vitest",
+    "test:watch": "vitest --watch"
+  },
+  "vitest": {
+    "globals": true,
+    "environment": "node"
   },
   "keywords": [],
   "author": "",
@@ -14,9 +21,7 @@
   "devDependencies": {
     "@types/node": "^20.10.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
-  },
-  "dependencies": {
+    "typescript": "^5.3.3",
     "vitest": "^4.0.6"
   }
 }

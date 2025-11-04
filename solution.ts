@@ -31,13 +31,7 @@
     - name
  */
 
-const INDENT = "  ";
-const HYPHEN = "-";
-const TEST_CASE =
-  "(id, name, email, type(id, name, customFields(c1, c2, c3)), externalId)";
-
-const TEST_CASE_2 =
-  "(id, (name, email, type(id, name, customFields(c1, c2, c3))), externalId)";
+import { HYPHEN, INDENT, TEST_CASE_1, TEST_CASE_2 } from "./constants";
 
 function validateInput(input: string): boolean {
   if (!input) return false;
@@ -108,11 +102,11 @@ function solve(input: string): string {
     }
   }
 
-  return output;
+  return output.trim();
 }
 
-if (require.main === module) {
-  const result = solve(TEST_CASE_2);
+if (typeof require !== "undefined" && require.main === module) {
+  const result = solve(TEST_CASE_1);
   console.log("Result:", `\n${result}`);
 }
 
