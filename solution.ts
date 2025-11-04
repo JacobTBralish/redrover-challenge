@@ -36,6 +36,9 @@ const HYPHEN = "-";
 const TEST_CASE =
   "(id, name, email, type(id, name, customFields(c1, c2, c3)), externalId)";
 
+const TEST_CASE_2 =
+  "(id, (name, email, type(id, name, customFields(c1, c2, c3))), externalId)";
+
 function validateInput(input: string): boolean {
   if (!input) return false;
   if (typeof input !== "string") return false;
@@ -75,12 +78,17 @@ function solve(input: string): string {
     const currentItem = inputAsArray[i];
 
     if (currentItem.startsWith("(")) {
+      if (i !== 0) {
+        indentLayer++;
+      }
+
       output += formatSection(
         currentItem.substring(1, currentItem.length),
         indentLayer
       );
     } else if (currentItem.includes("(")) {
       const [firstPart, secondPart] = currentItem.split("(");
+
       output += formatSection(firstPart, indentLayer);
       indentLayer++;
       output += formatSection(
@@ -89,6 +97,7 @@ function solve(input: string): string {
       );
     } else if (currentItem.endsWith(")")) {
       const closingParenthesis = currentItem.split(")").length - 1;
+
       output += formatSection(
         currentItem.substring(0, currentItem.length - closingParenthesis),
         indentLayer
@@ -103,7 +112,7 @@ function solve(input: string): string {
 }
 
 if (require.main === module) {
-  const result = solve(TEST_CASE);
+  const result = solve(TEST_CASE_2);
   console.log("Result:", `\n${result}`);
 }
 
