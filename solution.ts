@@ -31,7 +31,8 @@
     - name
  */
 
-import { HYPHEN, INDENT, TEST_CASE_1, TEST_CASE_2 } from "./constants";
+import { pathToFileURL } from "url";
+import { HYPHEN, INDENT, TEST_CASE_1 } from "./constants.ts";
 
 function validateInput(input: string): boolean {
   if (!input) return false;
@@ -105,9 +106,22 @@ function solve(input: string): string {
   return output.trim();
 }
 
-if (typeof require !== "undefined" && require.main === module) {
-  const result = solve(TEST_CASE_1);
+function sort(input: string, sortDirection: "ASC" | "DESC" = "ASC") {
+  let split1 = input.split("");
+  console.log(split1);
+}
+
+const isDirectRun =
+  (typeof require !== "undefined" && require.main === module) ||
+  (typeof import.meta !== "undefined" &&
+    import.meta.url === pathToFileURL(process.argv[1]).href);
+
+if (isDirectRun) {
+  const result1 = solve(TEST_CASE_1);
+  const result = sort(result1);
   console.log("Result:", `\n${result}`);
+  // const result = solve(TEST_CASE_1);
+  // console.log("Result:", `\n${result}`);
 }
 
 export { solve };
