@@ -72,12 +72,14 @@ function solve(input: string, sortDirection?: sortDirection | null): string {
     throw new Error("Invalid input. Your input is not balanced.");
 
   if (input.includes("()")) {
-    // remnove empty parenthesis and left over commas
-    input = input
-      .replace(/\(\s*\)/g, "")
-      .replace(/,\s*,/g, ",")
-      .replace(/,\s*\)/g, ")")
-      .replace(/\(\s*,/g, "(");
+    // remnove empty parenthesis at any nested level and left over commas
+    while (input.includes("()")) {
+      input = input
+        .replace(/\(\s*\)/g, "")
+        .replace(/,\s*,/g, ",")
+        .replace(/,\s*\)/g, ")")
+        .replace(/\(\s*,/g, "(");
+    }
   }
 
   if (sortDirection) {
