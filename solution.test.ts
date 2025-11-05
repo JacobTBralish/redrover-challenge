@@ -12,6 +12,7 @@ import {
   TEST_CASE_2_SOLUTION_SORTED_ASC,
   TEST_CASE_2_SOLUTION_SORTED_DESC,
   TEST_CASE_3,
+  TEST_CASE_3_NESTED_PARENTHESIS,
   TEST_CASE_3_SOLUTION,
   TEST_CASE_3_SOLUTION_SORTED_ASC,
   TEST_CASE_3_SOLUTION_SORTED_DESC,
@@ -28,6 +29,10 @@ describe("solve", () => {
 
   it("should handle example input 3 successfully", () => {
     expect(solve(TEST_CASE_3)).toBe(TEST_CASE_3_SOLUTION);
+  });
+
+  it("should handle example input 3 with nested parenthesis successfully", () => {
+    expect(solve(TEST_CASE_3_NESTED_PARENTHESIS)).toBe(TEST_CASE_3_SOLUTION);
   });
 
   it("should handle example input 1 with sort ASC successfully", () => {
