@@ -135,7 +135,9 @@ function recursiveSort(
   }
 
   grouped.sort((a, b) => {
-    const comparison = a[0].localeCompare(b[0]);
+    const sortStringA = String(a[0]);
+    const sortStringB = String(b[0]);
+    const comparison = sortStringA.localeCompare(sortStringB);
     return direction === ASC ? comparison : -comparison;
   });
 

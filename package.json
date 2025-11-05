@@ -12,7 +12,10 @@
   },
   "vitest": {
     "globals": true,
-    "environment": "node"
+    "environment": "node",
+    "exclude": [
+      "**/dist/**"
+    ]
   },
   "keywords": [],
   "author": "",
