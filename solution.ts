@@ -34,6 +34,8 @@
 import { pathToFileURL } from "url";
 import { HYPHEN, INDENT, TEST_CASE_1 } from "./constants.ts";
 
+type sortDirection = "ASC" | "DESC";
+
 function validateInput(input: string): boolean {
   if (!input) return false;
   if (typeof input !== "string") return false;
@@ -59,16 +61,19 @@ function formatSection(string: string, indentLayer: number): string {
   return `${INDENT.repeat(indentLayer)}${HYPHEN} ${string}\n`;
 }
 
-function solve(input: string): string {
+function solve(input: string, sortDirection?: sortDirection | null): string {
   if (!validateInput(input))
     throw new Error("Invalid input. Your input is not a valid string.");
   if (!validateParenthesis(input))
     throw new Error("Invalid input. Your input is not balanced.");
 
-  let indentLayer = 0;
-  let output = "";
+  if (sortDirection) {
+    input = sort(input, sortDirection);
+  }
+
+  let indentLayer: number = 0;
+  let output: string = "";
   let inputAsArray = input.split(", ");
-  console.log(input);
 
   for (let i = 0; i < inputAsArray.length; i++) {
     const currentItem = inputAsArray[i];
@@ -107,49 +112,66 @@ function solve(input: string): string {
   return output.trim();
 }
 
-function prepInput(input: string) {
-  const inputLines = input
-    .split("\n")
-    .map((l) => l)
-    .filter((l) => l.trim().startsWith("-"));
-
-  return inputLines.map((line) =>
-    line.replace(/^([ \t]*)-\s+/gm, "$1").split(INDENT)
-  );
-}
-
-function countEmpty(stringArray: string[]) {
-  let i = 0;
-  while (i < stringArray.length && stringArray[i] === "") i++;
-  return i;
-}
-
-function sort(input: string, sortDirection: "ASC" | "DESC" = "ASC") {
-  const direction = sortDirection === "ASC" ? 1 : -1;
-
-  const arrays = prepInput(input);
-
-  arrays.sort((a, b) => {
-    const indentCountA = countEmpty(a);
-    const indentCountB = countEmpty(b);
-
-    if (indentCountA !== indentCountB)
-      return (indentCountA - indentCountB) * direction;
-
-    const aKey = a.slice(indentCountA).join(".");
-    const bKey = b.slice(indentCountB).join(".");
-    return aKey.localeCompare(bKey) * direction;
+function recursiveSort(
+  arrays: string[],
+  direction: sortDirection = "ASC"
+): any[] {
+  const sorted = arrays.map((array) => {
+    return Array.isArray(array) ? recursiveSort(array, direction) : array;
   });
 
-  const output = arrays
-    .map((array) => {
-      const indentDepth = countEmpty(array);
-      const name = array[indentDepth] ?? "";
-      return `${INDENT.repeat(indentDepth)}${HYPHEN} ${name}`;
-    })
-    .join("\n");
+  const grouped = [];
 
-  console.log(output);
+  for (let i = 0; i < sorted.length; i++) {
+    const value = sorted[i];
+    if (Array.isArray(value)) continue;
+
+    if (i + 1 < sorted.length && Array.isArray(sorted[i + 1])) {
+      grouped.push([value, sorted[i + 1]]);
+      i++;
+    } else {
+      grouped.push([value]);
+    }
+  }
+
+  grouped.sort((a, b) => {
+    const comparison = a[0].localeCompare(b[0]);
+    return direction === "ASC" ? comparison : -comparison;
+  });
+
+  const output: any[] = [];
+
+  grouped.forEach((group) => {
+    output.push(group[0]);
+    if (group.length > 1) {
+      output.push(group[1]);
+    }
+  });
+
+  return output;
+}
+
+function sort(input: string, direction: sortDirection) {
+  const jsonString = input
+    .replace(/\(/g, "[")
+    .replace(/\)/g, "]")
+    .replace(/([a-zA-Z0-9_]+)/g, '"$1"')
+    .replace(/"\[/g, '",[');
+
+  const jsonParsed = JSON.parse(jsonString);
+
+  const sorted = recursiveSort(jsonParsed, direction);
+
+  let jsonStringify = JSON.stringify(sorted);
+
+  jsonStringify = jsonStringify
+    .replace(/",\[/g, '"[')
+    .replace(/"/g, "")
+    .replace(/\[/g, "(")
+    .replace(/\]/g, ")")
+    .replace(/,/g, ", ");
+
+  return jsonStringify;
 }
 
 const isDirectRun =
@@ -158,11 +180,8 @@ const isDirectRun =
     import.meta.url === pathToFileURL(process.argv[1]).href);
 
 if (isDirectRun) {
-  const result1 = solve(TEST_CASE_1);
-  const result = sort(result1);
+  const result = solve(TEST_CASE_1, "ASC");
   console.log("Result:", `\n${result}`);
-  // const result = solve(TEST_CASE_1);
-  // console.log("Result:", `\n${result}`);
 }
 
 export { solve };
