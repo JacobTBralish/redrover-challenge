@@ -56,3 +56,21 @@ export const TEST_CASE_2_SOLUTION = `- id
       - c2
       - c3
 - externalId`;
+
+export const TEST_CASE_3 = `(id, name, type(), customFields(c1, c2, c3))`;
+
+export const TEST_CASE_3_SOLUTION_SORTED = `- customFields
+  - c1
+  - c2
+  - c3
+- id
+- name
+- type`;
+
+export const TEST_CASE_3_SOLUTION = `- id
+- name
+- type
+- customFields
+  - c1
+  - c2
+  - c3`;

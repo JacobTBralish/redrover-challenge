@@ -67,6 +67,15 @@ function solve(input: string, sortDirection?: sortDirection | null): string {
   if (!validateParenthesis(input))
     throw new Error("Invalid input. Your input is not balanced.");
 
+  if (input.includes("()")) {
+    // remnove empty parenthesis and left over commas
+    input = input
+      .replace(/\(\s*\)/g, "")
+      .replace(/,\s*,/g, ",")
+      .replace(/,\s*\)/g, ")")
+      .replace(/\(\s*,/g, "(");
+  }
+
   if (sortDirection) {
     input = sort(input, sortDirection);
   }

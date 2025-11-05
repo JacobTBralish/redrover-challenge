@@ -7,6 +7,9 @@ import {
   TEST_CASE_2,
   TEST_CASE_2_SOLUTION,
   TEST_CASE_2_SOLUTION_SORTED,
+  TEST_CASE_3,
+  TEST_CASE_3_SOLUTION,
+  TEST_CASE_3_SOLUTION_SORTED,
 } from "./constants";
 
 describe("solve", () => {
@@ -18,11 +21,19 @@ describe("solve", () => {
     expect(solve(TEST_CASE_2)).toBe(TEST_CASE_2_SOLUTION);
   });
 
+  it("should handle example input 3 successfully", () => {
+    expect(solve(TEST_CASE_3)).toBe(TEST_CASE_3_SOLUTION);
+  });
+
   it("should handle example input 1 with sort ASC successfully", () => {
     expect(solve(TEST_CASE_1, "ASC")).toBe(TEST_CASE_1_SOLUTION_SORTED);
   });
 
-  it("should handle example input 1 with sort ASC successfully", () => {
+  it("should handle example input 2 with sort ASC successfully", () => {
     expect(solve(TEST_CASE_2, "ASC")).toBe(TEST_CASE_2_SOLUTION_SORTED);
+  });
+
+  it("should handle example input 3 with sort ASC successfully", () => {
+    expect(solve(TEST_CASE_3, "ASC")).toBe(TEST_CASE_3_SOLUTION_SORTED);
   });
 });
