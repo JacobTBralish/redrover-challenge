@@ -32,9 +32,9 @@
  */
 
 import { pathToFileURL } from "url";
-import { HYPHEN, INDENT, TEST_CASE_1 } from "./constants.ts";
+import { HYPHEN, INDENT, TEST_CASE_1, ASC, DESC } from "./constants.ts";
 
-type sortDirection = "ASC" | "DESC";
+type sortDirection = typeof ASC | typeof DESC;
 
 function validateInput(input: string): boolean {
   if (!input) return false;
@@ -114,7 +114,7 @@ function solve(input: string, sortDirection?: sortDirection | null): string {
 
 function recursiveSort(
   arrays: string[],
-  direction: sortDirection = "ASC"
+  direction: sortDirection = ASC
 ): any[] {
   const sorted = arrays.map((array) => {
     return Array.isArray(array) ? recursiveSort(array, direction) : array;
@@ -136,7 +136,7 @@ function recursiveSort(
 
   grouped.sort((a, b) => {
     const comparison = a[0].localeCompare(b[0]);
-    return direction === "ASC" ? comparison : -comparison;
+    return direction === ASC ? comparison : -comparison;
   });
 
   const output: any[] = [];
@@ -151,6 +151,14 @@ function recursiveSort(
   return output;
 }
 
+function arrayToString(array: string[]): string {
+  const arrayParts = array.map((element) => {
+    return Array.isArray(element) ? arrayToString(element) : element;
+  });
+
+  return `(${arrayParts.join(", ")})`;
+}
+
 function sort(input: string, direction: sortDirection) {
   const jsonString = input
     .replace(/\(/g, "[")
@@ -162,16 +170,7 @@ function sort(input: string, direction: sortDirection) {
 
   const sorted = recursiveSort(jsonParsed, direction);
 
-  let jsonStringify = JSON.stringify(sorted);
-
-  jsonStringify = jsonStringify
-    .replace(/",\[/g, '"[')
-    .replace(/"/g, "")
-    .replace(/\[/g, "(")
-    .replace(/\]/g, ")")
-    .replace(/,/g, ", ");
-
-  return jsonStringify;
+  return arrayToString(sorted);
 }
 
 const isDirectRun =
@@ -180,7 +179,7 @@ const isDirectRun =
     import.meta.url === pathToFileURL(process.argv[1]).href);
 
 if (isDirectRun) {
-  const result = solve(TEST_CASE_1, "ASC");
+  const result = solve(TEST_CASE_1, "DESC");
   console.log("Result:", `\n${result}`);
 }
 
