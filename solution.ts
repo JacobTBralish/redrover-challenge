@@ -36,6 +36,10 @@ import { HYPHEN, INDENT, TEST_CASE_1, ASC, DESC } from "./constants.ts";
 
 type sortDirection = typeof ASC | typeof DESC;
 
+/* 
+  There are many more validation steps we could take to ensure proper
+  formatting or to enforce specific string formats the code expects.
+*/
 function validateInput(input: string): boolean {
   if (!input) return false;
   if (typeof input !== "string") return false;
@@ -190,7 +194,7 @@ const isDirectRun =
     import.meta.url === pathToFileURL(process.argv[1]).href);
 
 if (isDirectRun) {
-  const result = solve(TEST_CASE_1, "DESC");
+  const result = solve(TEST_CASE_1, ASC);
   console.log("Result:", `\n${result}`);
 }
 
